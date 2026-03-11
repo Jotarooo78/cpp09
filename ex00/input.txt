@@ -1,0 +1,17 @@
+2011-01-03 | 3
+2011-01-03 | 2
+2011-01-03 | 1
+2011-01-03 | 1.2
+2011-01-09 | 1
+-2011-01-10 | 5              # nombre negatif avec date invalide (mais on verifie la date avant)
+2011-42-42 | 10               # date invalide
+2012-01-11 | 1
+2012-01-12 | 1001             # trop grand (>1000)
+2012-01-13 | abc              # mauvaise valeur
+2012-01-14                 # ligne mal formée (pas de '|')
+2012-01-15 |               # pas de valeur apres '|'
+2012-01-16 | 5000            # trop grand
+2012-01-17 | -10             # negatif
+2012-01-18 | 0               # zero OK (positif ou nul)
+2012-01-19 | 1000            # valeur limite OK
+2012-01-20 | 1000.01         # juste au-dessus limite
