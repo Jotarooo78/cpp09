@@ -6,7 +6,7 @@
 /*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 11:39:02 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/11 18:42:09 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/03/13 17:14:04 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,17 @@ BitcoinExchange::BitcoinExchange() {}
 
 BitcoinExchange::~BitcoinExchange() {}
 
-BitcoinExchange::BitcoinExchange(const BitcoinExchange &copy) {}
+BitcoinExchange::BitcoinExchange(const BitcoinExchange &copy) {
+   (void)copy;
+}
 
-BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &copy) {}
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &copy) {
+
+   if (this != &copy) {
+      (void)copy;
+   }
+   return *this;
+}
 
 bool BitcoinExchange::isValidDate(const std::string &date) {
    
@@ -67,33 +75,52 @@ bool BitcoinExchange::isValidDate(const std::string &date) {
    }
 }
 
-bool BitcoinExchange::isValidValue(const std::string &value) {
+bool BitcoinExchange::isValidValue(const std::string &value, double &outValue, int option) {
    
    try {
       if (value.empty())
          return false;
-      size_t pos;
-      double num = std::stod(value, &pos);
-      if (num < 0 || num > 1000 || pos != value.length())
-         return false;
+
+      char *endPtr;
+      double num = std::strtod(value.c_str(), &endPtr);
+      if (*endPtr != '\0') {
+         std::cerr << "Error: bad line format " << value << std::endl; // ici
+         return false ;
+      }
+      if (option == 1) {
+         if (num < 0 || num > 1000) {
+         std::cerr << "Error: btc > 1000 or btc < 0 : " << value << std::endl; // ici
+         return false ;
+         }
+      }
+      else  {
+         if (num < 0) {
+            std::cerr << "Error: btc < 0 : " << value << std::endl; // ici
+            return false ;
+         }
+      }
+      outValue = num;
       return true;
    }
    catch (const std::invalid_argument& e) {
-      return false; 
+      return false;
    }
    catch (const std::out_of_range& e) {
       return false;
    }
+   return false;
 }
 
 double BitcoinExchange::findClosestRate(const std::string &date) {
    
-   auto it = _database.lower_bound(date);
+   std::map<std::string, double>::iterator it = _database.lower_bound(date);
    
    if (it != _database.end() && it->first == date)
       return it->second;
-   if (it == _database.begin())
-      throw std::runtime_error("Error: date too old");
+   if (it == _database.begin()){
+         std::cerr << "Error: bad line format " << std::endl;
+         return false ;
+   }
    if (it == _database.end()) {
       it--;
       return it->second;
@@ -102,111 +129,125 @@ double BitcoinExchange::findClosestRate(const std::string &date) {
    return it->second;
 }
 
-std::string BitcoinExchange::trim(std::string &line) {
+void  BitcoinExchange::trim(std::string &line) {
 
    size_t start = line.find_first_not_of(" \t");
-   if (start == std::string::npos)
-      return line;
+   if (start == std::string::npos) {
+      std::cerr << "Error: bad line format " << line << std::endl;
+      return ;
+   }
    size_t end = line.find_last_not_of(" \t");
    size_t length = end - start + 1;
-   return line.substr(start, length);
+   line = line.substr(start, length);
 }
 
-void BitcoinExchange::parseDataBase(const std::string &filename) {
+void BitcoinExchange::parseDataBase(const char *dataBase) {
 
-   std::ifstream file;
+   std::ifstream file(dataBase);
 
-   file.open(filename);
    if (!file.is_open()) {
-      std::cerr << "Error: could not open file " << filename << std::endl;
+      std::cerr << "Error: could not open file " << dataBase << std::endl;
       return;
    }
    std::string line;
    std::string date;
    std::string valueStr;
    double value;
-   
+
    getline(file, line);
-   
    while (getline(file, line)) {
       
       if (line.empty())
          continue;
          
-      line = trim(line);
+      trim(line);
       if (line.empty())
          continue;
-
-      size_t commaPos = line.find(',');
-      if (commaPos == std::string::npos) {
+         
+      size_t comaPos = line.find(',');
+      if (comaPos == std::string::npos) {
          std::cerr << "Error: bad input format " << line << std::endl;
-         return;
+         continue ;
       }
-      date = line.substr(0, commaPos);
-      date = trim(date);
+      date = line.substr(0, comaPos);
+      trim(date);
       if (isValidDate(date) == false) {
          std::cerr << "Error: bad date format " << date << std::endl;
          continue ;
       }
-      valueStr = line.substr(commaPos + 1);
-      valueStr = trim(valueStr);
-      if (isValidValue(valueStr) == false) {
+      valueStr = line.substr(comaPos + 1);
+      trim(valueStr);
+      
+
+      if (!isValidValue(valueStr, value, 0)) {
          std::cerr << "Error: bad value format " << valueStr << std::endl;
-         continue ;
+         continue;
       }
-      value = std::stod(valueStr);
-      _database.insert(std::make_pair(date,value));
+      _database.insert(std::make_pair(date, value));
    }
    file.close();
 }
 
-void BitcoinExchange::processInputFile(const std::string &filename) {
+void BitcoinExchange::processInputFile(const std::string &inputTxt) {
 
-   std::ifstream file;
+   std::ifstream file(inputTxt.c_str());
 
-   file.open(filename);
    if (!file.is_open()) {
-      std::cerr << "Error: could not open file " << filename << std::endl;
+      std::cerr << "Error: could not open file " << inputTxt << std::endl;
       return;
    }
    std::string line;
    std::string date;
    std::string valueStr;
    double value;
+   bool firstLine = true;
    
-   getline(file, line);
    while (getline(file, line)) {
       
       if (line.empty())
          continue;
          
-      line = trim(line);
-      if (line.empty())
+      trim(line);
+      if (line.empty() || line =="")
          continue;
-
-      size_t commaPos = line.find(',');
-      if (commaPos == std::string::npos) {
-         std::cerr << "Error: bad input format " << line << std::endl;
-         return;
+      
+      if (firstLine == true) {
+         firstLine = false;
+         if (line.find("date") != std::string::npos || line.find("value") != std::string::npos || line.find("|") == std::string::npos) {
+            continue ;
+         }
       }
-      date = line.substr(0, commaPos);
-      date = trim(date);
+
+      size_t pipePos = line.find('|');
+      if (pipePos == std::string::npos) {
+         std::cerr << "Error: bad input format " << line << std::endl;
+         continue;
+      }
+      date = line.substr(0, pipePos);
+      trim(date);
       if (isValidDate(date) == false) {
          std::cerr << "Error: bad date format " << date << std::endl;
          continue ;
       }
-      valueStr = line.substr(commaPos + 1);
-      valueStr = trim(valueStr);
-      if (isValidValue(valueStr) == false) {
-         std::cerr << "Error: bad value format " << valueStr << std::endl;
-         continue ;
+      valueStr = line.substr(pipePos + 1);
+      trim(valueStr);
+         
+      if (isValidValue(valueStr, value, 1)) {
+         double rate = findClosestRate(date);
+         double res = value * rate;
+         std::cout << date << " -> " << value << " = " << res << std::endl;
       }
-      value = std::stod(valueStr);
-      _database.insert(std::make_pair(date,value));
    }
    file.close();
 }
 
-//2009-01-02,0
+void BitcoinExchange::parseAndDisplay(const std::string &filename) {
+
+   const char *dataBase = "data.csv";
+   parseDataBase(dataBase);
+   processInputFile(filename);
+}
+
+//2014-05-13,442.45
 
 //2011-01-03 | 3

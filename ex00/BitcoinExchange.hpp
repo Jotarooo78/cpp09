@@ -12,9 +12,10 @@ class BitcoinExchange {
    private :
       std::map<std::string, double> _database;
       bool isValidDate(const std::string &date);
-      bool isValidValue(const std::string &value);
+      bool isValidValue(const std::string &value, double &outValue, int option);
       double findClosestRate(const std::string &date);
-      void parseDataBase(const std::string &file);
+      void parseDataBase(const char *dataBase);
+      void processInputFile(const std::string& filename);
 
    public :
       BitcoinExchange();
@@ -22,8 +23,8 @@ class BitcoinExchange {
       BitcoinExchange(const BitcoinExchange &copy);
       BitcoinExchange &operator=(const BitcoinExchange &copy);
 
-      void processInputFile(const std::string& filename);
-      std::string trim(std::string &line);
+      void parseAndDisplay(const std::string& filename);
+      void trim(std::string &line);
 
       // class BitcoinException : public std::exception {
       //    private:
