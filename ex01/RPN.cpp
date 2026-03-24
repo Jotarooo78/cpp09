@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
+/*   By: armosnie <armosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 15:08:35 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/16 19:15:05 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/03/24 18:18:17 by armosnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
+#include <limits>
 
 RPN::RPN() {}
 
@@ -27,21 +28,6 @@ RPN &RPN::operator=(const RPN &copy) {
     return *this;
 }
 
-int RPN::add(int a, int b) {
-    return a + b;
-}
-
-int RPN::sub(int a, int b) {
-    return a - b;
-}
-
-int RPN::mul(int a, int b) {
-    return a * b;
-}
-
-int RPN::divi(int a, int b) {
-    return a / b;
-}
 
 bool isOperator(char word) {
     if (word == '-' || word == '+' || word == '*' || word == '/')
@@ -54,12 +40,12 @@ bool RPN::algo(char *arg) {
     std::istringstream iss(arg);
     std::string word;
     char op;
-    int insertNum;
-    int num1;
-    int num2;
-    int res;
+    long long insertNum = 0;
+    long long num1 = 0;
+    long long num2 = 0;
     int numCount = 0;
     int opCount = 0;
+    long long res = 0;
 
     while (iss >> word) {
         if (word.empty())
@@ -73,7 +59,7 @@ bool RPN::algo(char *arg) {
         }
         else if (isOperator(word[0])) {
             if (_stack.size() < 2) {
-                std::cerr << "Too many or few operator signs" << std::endl;
+                std::cerr << "Invalid position or number of operator signs" << std::endl;
                 return false;
             }
             opCount++;
@@ -84,27 +70,31 @@ bool RPN::algo(char *arg) {
             _stack.pop();
             switch(op) {
                 case '+' : 
-                    res = add(num1, num2);
+                    res = num1 + num2;
                     break;
                 case '-' : 
-                    res = sub(num1, num2);
+                    res = num1 - num2;
                     break;
                 case '*' : 
-                    res = mul(num1, num2);
+                    res = num1 * num2;
                     break;
                 case '/' : 
                     if (op == '/' && num2 == 0)
                         return false;
-                    res = divi(num1, num2);
+                    res = num1 / num2;
                     break;
                 default : return false;
             }
+            if (res > std::numeric_limits<int>::max() || res < std::numeric_limits<int>::min()) {
+                std::cerr << "Int Overflow or Underflow" << std::endl;
+                return false;
+            }
+            _stack.push(res);
         }
         else {
             std::cerr << "Unauthorized character found : " << word[0] << std::endl;
             return false;
         }
-        _stack.push(res);
     }
     res = _stack.top();
     _stack.pop();
@@ -125,3 +115,5 @@ bool RPN::algo(char *arg) {
 // $> ./RPN "(1 + 1)"
 // Error
 // $>
+
+

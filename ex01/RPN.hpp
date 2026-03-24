@@ -10,11 +10,6 @@ class RPN {
 
     private :
         std::stack<int> _stack;
-        
-        static int add(int a, int b);
-        static int sub(int a, int b);
-        static int mul(int a, int b);
-        static int divi(int a, int b);
 
     public :
         RPN();

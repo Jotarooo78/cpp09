@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
+/*   By: armosnie <armosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 12:29:47 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/16 18:53:10 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/03/24 16:27:26 by armosnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
    }
    RPN num;
    if (num.algo(argv[1]) == false) {
-      std::cerr << "invalid inverted Polish mathematical expression as argument" << std::endl;
+      std::cerr << "invalid inverted Polish mathematical expression" << std::endl;
       return 1;
    }
    return 0;
