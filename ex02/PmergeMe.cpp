@@ -6,7 +6,7 @@
 /*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 16:56:23 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/17 18:47:50 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/03/25 17:03:14 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void PmergeMe::sort(int *arr, int size) {
     std::cout << "Time to process a range of " << size << " elements with std::deque : " << end - start << std::endl;
 }
 
+
+
 void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
     
     if (vec.size() < 2)
@@ -65,9 +67,13 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
         int lastValue = vec.back();
     }
     fordJohnsonVector(big);
-
     std::vector<int> main;
-    
-    main.push_back(small[0]);
-    for ()
+    for (int i = 0; big.size() != 0 && big[i]; i++) {
+        main.push_back(small[0]);
+        main.push_back(big[i]);
+    }
+    for (int i = 1; small.size() != 0 && small[i]; i++) {
+        binaryResearch(small[i], main);
+    }
+    big = main;
 }
