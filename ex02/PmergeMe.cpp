@@ -6,7 +6,7 @@
 /*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 16:56:23 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/25 17:03:14 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/03/26 18:24:56 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,35 @@ void PmergeMe::sort(int *arr, int size) {
 }
 
 
+void binarySearch(int value, std::vector<int> &main, int mainSize) {
+
+    int low = 0;
+    int high = mainSize;
+    
+    while (low < high) {
+        int mid = (high + low) / 2;
+        if (main[mid] > value)
+            low = mid + 1;
+        else
+            low = mid - 1;
+    }
+    main.insert(main.begin() + low, value);
+}
 
 void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
     
+    bool hasOdd = false;
+
     if (vec.size() < 2)
         return ;
     
     std::vector<int> small;
     std::vector<int> big;
+
+    if (vec.size() % 2 != 0) {
+        hasOdd = true;
+        int lastValue = vec.back();
+    }
 
     for (int i = 1; i < vec.size(); i += 2) {
         if (vec[i - 1] > vec[i]) {
@@ -63,17 +84,16 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
             big.push_back(vec[i]);
         }
     }
-    if (vec.size() % 2 != 0) {
-        int lastValue = vec.back();
-    }
     fordJohnsonVector(big);
-    std::vector<int> main;
-    for (int i = 0; big.size() != 0 && big[i]; i++) {
-        main.push_back(small[0]);
-        main.push_back(big[i]);
-    }
-    for (int i = 1; small.size() != 0 && small[i]; i++) {
-        binaryResearch(small[i], main);
-    }
-    big = main;
+    std::vector<int> main = big;
+    main.insert(main.begin(), small[0]);
+
+    
+    // for (int i = 0; big.size() != 0 && big[i]; i++) {
+    //     main.push_back(small[0]);
+    //     main.push_back(big[i]);
+    // }
+    // for (int i = 1; small.size() != 0 && small[i]; i++) {
+    //     binarySearch(small[i], main);
+    // }
 }
