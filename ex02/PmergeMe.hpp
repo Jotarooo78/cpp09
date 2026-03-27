@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <cmath>
 #include <vector>
 #include <deque>
 #include <cstdlib>
@@ -14,7 +15,6 @@ class PmergeMe {
         void insertBinaryVector(std::vector<int> &vec);
         void fordJohnsonDeque(std::deque<int> &dq);
         void insertBinaryDeque(std::deque<int> &dq);
-        std::vector<int> jacobsthalSequence(int n);
 
     public :
         PmergeMe();

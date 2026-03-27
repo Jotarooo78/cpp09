@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
+/*   By: armosnie <armosnie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 18:00:03 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/17 18:10:15 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/03/27 16:45:10 by armosnie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
     }
     PmergeMe Pm;
     Pm.sort(arr, argc - 1);
+    
     
     delete[] arr;
     return 0;
