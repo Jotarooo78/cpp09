@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armosnie <armosnie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 18:00:03 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/27 16:45:10 by armosnie         ###   ########.fr       */
+/*   Updated: 2026/03/30 18:59:16 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
         return 1;
     }
     int *arr = new int[argc -1];
-    for (int i = 1; i < argc - 1; i++) {
+    for (int i = 1; i < argc - 1; i++) { // ajouter un peu de parcing
         arr[i - 1] = atoi(argv[i]);
     }
     PmergeMe Pm;

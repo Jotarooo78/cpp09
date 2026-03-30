@@ -1,0 +1,12 @@
+Comment marche l'algo selon moi :
+
+exemple : 6, 3 ,1 ,7 , 5, 9, 2
+
+1. creer des pairs : (6,3) (1,7) (5,9) et 2
+2. comparer de 2 en 2 pour creer 2 vecteurs de int, une pour les grands nombres de la paire et l'autre pour les petites
+3. la fonction s'appelle en recursivite avec le vecteur big en reference en parametre
+4. 2 nouveaux vec big(2) et small(2) pour big(1);
+5. recursivite jusqu'a obtenir un chiffre dans big(n) et small(n)
+6. comme big(n) et small(n) sont deja triees on les insere dans main(n);
+7. on insere donc small(n-1)[0] est inserer dans main(n-1).begin()
+8. on insere ensuite avec l'insertion binaire le reste de small dans ma

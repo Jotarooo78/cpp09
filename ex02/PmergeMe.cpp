@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: armosnie <armosnie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 16:56:23 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/27 19:18:32 by armosnie         ###   ########.fr       */
+/*   Updated: 2026/03/30 20:25:25 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,14 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &copy) {
     return *this;
 }
 
+void    printVec(std::vector<int> &main) {
+    
+    for (int i = 0; i < (int)main.size(); i++) {
+        std::cout << main[i] << " ";
+    }
+    std::cout << "\n";
+}
+
 void PmergeMe::sort(int *arr, int size) {
     
     std::vector<int> vec(arr, arr + size);
@@ -37,6 +45,7 @@ void PmergeMe::sort(int *arr, int size) {
     fordJohnsonVector(vec);
     clock_t end = clock();
     std::cout << "Time to process a range of " << size << " elements with std::vector : " << static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000<< std::endl;
+    printVec(vec);
 
     // clock_t start;
     // fordJohnsonDeque(deq);
@@ -67,7 +76,7 @@ static std::vector<int> jacobsthalSequence(int n) {
     jacob.push_back(1);
     
     while (1) {
-        int nxt = (jacob[jacob.size() - 1] - 1) + 2 * (jacob[jacob.size()] - 2);
+        int nxt = (jacob[jacob.size() - 1]) + 2 * (jacob[jacob.size() - 2]);
         if (nxt >= n)
             break ;
         jacob.push_back(nxt);
@@ -92,7 +101,7 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
         lastValue = vec.back();
     }
 
-    for (int i = 1; i < static_cast<int>(vec.size()); i += 2) {
+    for (size_t i = 1; i < vec.size(); i += 2) {
         if (vec[i - 1] > vec[i]) {
             small.push_back(vec[i]);
             big.push_back(vec[i - 1]);
@@ -111,10 +120,8 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
     inserted[0] = true;
     
     for (int i = 1; i < static_cast<int>(jacob.size()); i++) {
-        int idx = jacob[i] - 1;
-        if (idx >= static_cast<int>(small.size()))
-            idx = small.size() - 1;
-        for (int j = i; j > jacob[i - 1] - 1; j--) {
+        for (int j = small.size() - 1; j > jacob[i - 1] - 1; j--) {
+            std::cout << "i : " << i << std::endl;
             if (j < static_cast<int>(small.size()) && inserted[j] == false) {
                 int bound = static_cast<int>(main.size());
                 binarySearch(small[j], main, bound);
