@@ -6,7 +6,7 @@
 /*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 16:56:23 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/30 20:25:25 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/03/31 19:59:06 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &copy) {
     return *this;
 }
 
-void    printVec(std::vector<int> &main) {
+void    printVec(std::vector<int> &mainChain) {
     
-    for (int i = 0; i < (int)main.size(); i++) {
-        std::cout << main[i] << " ";
+    for (int i = 0; i < (int)mainChain.size(); i++) {
+        std::cout << mainChain[i] << " ";
     }
     std::cout << "\n";
 }
@@ -54,19 +54,19 @@ void PmergeMe::sort(int *arr, int size) {
 }
 
 
-void binarySearch(int value, std::vector<int> &main, int mainSize) {
+void binarySearch(int value, std::vector<int> &mainChain, int limit) {
 
     int low = 0;
-    int high = mainSize;
+    int high = limit;
     
     while (low < high) {
         int mid = low + (high - low) / 2;
-        if (main[mid] > value)
-            low = mid + 1;
-        else
+        if (mainChain[mid] > value)
             high = mid - 1;
+        else
+            low = mid + 1;
     }
-    main.insert(main.begin() + low, value);
+    mainChain.insert(mainChain.begin() + low, value);
 }
 
 static std::vector<int> jacobsthalSequence(int n) {
@@ -99,6 +99,7 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
     if (vec.size() % 2 != 0) {
         hasOdd = true;
         lastValue = vec.back();
+        std::cout << "lastValue start : " << vec.back() << std::endl;
     }
 
     for (size_t i = 1; i < vec.size(); i += 2) {
@@ -112,24 +113,26 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
         }
     }
     fordJohnsonVector(big);
-    std::vector<int> main = big;
-    main.insert(main.begin(), small[0]);
+    std::vector<int> mainChain = big;
+    printVec(mainChain);
+    std::cout << "small[0] : " << small[0] << std::endl;
+    mainChain.insert(mainChain.begin(), small[0]);
 
     std::vector<int> jacob = jacobsthalSequence(small.size());
-    std::vector<bool> inserted(small.size(), false);
-    inserted[0] = true;
-    
-    for (int i = 1; i < static_cast<int>(jacob.size()); i++) {
-        for (int j = small.size() - 1; j > jacob[i - 1] - 1; j--) {
-            std::cout << "i : " << i << std::endl;
-            if (j < static_cast<int>(small.size()) && inserted[j] == false) {
-                int bound = static_cast<int>(main.size());
-                binarySearch(small[j], main, bound);
-                inserted[j] = true;
+    std::cout << "small size : " << small.size() << std::endl;
+
+    for (int i = 1; i < (int)small.size(); i++) {
+        if (i == jacob[i] - 1) { // -1 0 0 2 4 10...
+            for (int j = i; j > jacob[i] - 1; j--) {
+                std::cout << "small[i] : " << small[i] << std::endl;
+                std::cout << "big[i] : " << big[i] << std::endl;
+                binarySearch(small[i], mainChain, big[i]);
             }
         }
     }
-    if (hasOdd)
-        binarySearch(lastValue, main, main.size());
-    vec = main;
+    if (hasOdd) {
+        std::cout << "lastValue end : " << lastValue << std::endl;
+        binarySearch(lastValue, mainChain, mainChain.size());
+    }
+    vec = mainChain;
 }
