@@ -6,7 +6,7 @@
 /*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 16:56:23 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/31 19:59:06 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/04/01 18:38:40 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void binarySearch(int value, std::vector<int> &mainChain, int limit) {
     while (low < high) {
         int mid = low + (high - low) / 2;
         if (mainChain[mid] > value)
-            high = mid - 1;
+            high = mid;
         else
             low = mid + 1;
     }
@@ -99,7 +99,6 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
     if (vec.size() % 2 != 0) {
         hasOdd = true;
         lastValue = vec.back();
-        std::cout << "lastValue start : " << vec.back() << std::endl;
     }
 
     for (size_t i = 1; i < vec.size(); i += 2) {
@@ -113,25 +112,38 @@ void PmergeMe::fordJohnsonVector(std::vector<int> &vec) {
         }
     }
     fordJohnsonVector(big);
+    std::cout << "\\\\\\\\\\\\\\\\\\\\\\debug/////////////////\n";
     std::vector<int> mainChain = big;
+    std::cout << "mainChain : ";
     printVec(mainChain);
-    std::cout << "small[0] : " << small[0] << std::endl;
-    mainChain.insert(mainChain.begin(), small[0]);
-
+    std::cout << "smallChain : ";
+    printVec(small);
+    std::cout << "bigChain : ";
+    printVec(big);
+    std::cout << "jacob : ";
     std::vector<int> jacob = jacobsthalSequence(small.size());
-    std::cout << "small size : " << small.size() << std::endl;
+    printVec(jacob);
+    mainChain.insert(mainChain.begin(), small[0]);
+    std::vector<bool> inserted(small.size(), false);
+    inserted[0] = true;
+    
+    std::cout << "small size : " << small.size() << "\n\n";
 
-    for (int i = 1; i < (int)small.size(); i++) {
-        if (i == jacob[i] - 1) { // -1 0 0 2 4 10...
-            for (int j = i; j > jacob[i] - 1; j--) {
-                std::cout << "small[i] : " << small[i] << std::endl;
-                std::cout << "big[i] : " << big[i] << std::endl;
-                binarySearch(small[i], mainChain, big[i]);
+    for (size_t i = 2; i < jacob.size() - 1; i++) {
+        size_t end = jacob[i];
+        if (end < small.size())
+        end = small.size();
+        size_t start = jacob[i - 1];
+        std::cout << "i = " << i << std::endl;
+        for (size_t j = end - 1; j >= start; j--) {
+            if (inserted[j] == false) {
+                std::cout << "j = " << j << " | small[j] while the loop : " << small[j] << std::endl;
+                binarySearch(small[j], mainChain, mainChain.size());
+                inserted[j] = true;
             }
         }
     }
     if (hasOdd) {
-        std::cout << "lastValue end : " << lastValue << std::endl;
         binarySearch(lastValue, mainChain, mainChain.size());
     }
     vec = mainChain;
