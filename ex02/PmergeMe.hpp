@@ -11,17 +11,14 @@
 class PmergeMe {
 
     private :
-        void fordJohnsonVector(std::vector<int> &vec);
-        void insertBinaryVector(std::vector<int> &vec);
-        void fordJohnsonDeque(std::deque<int> &dq);
-        void insertBinaryDeque(std::deque<int> &dq);
 
     public :
         PmergeMe();
-        ~PmergeMe();    
+        ~PmergeMe();
         PmergeMe(const PmergeMe &copy);
         PmergeMe &operator=(const PmergeMe &copy);
-        void sort(int *arr, int size);
+        void sortVec(int *arr, int size);
+        void sortDeque(int *arr, int size);
 } ;
 
 #endif

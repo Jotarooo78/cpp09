@@ -6,7 +6,7 @@
 /*   By: armaunito <armaunito@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 18:00:03 by armaunito         #+#    #+#             */
-/*   Updated: 2026/03/31 19:35:11 by armaunito        ###   ########.fr       */
+/*   Updated: 2026/04/05 18:59:05 by armaunito        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,10 @@ int main(int argc, char **argv) {
                 delete [] arr;
                 return 1;
         }
-        std::cout << "arr[i] : " << arr[i - 1] << std::endl;
     }
     PmergeMe Pm;
-    Pm.sort(arr, argc - 1);
-    
-
+    Pm.sortVec(arr, argc - 1);
+    Pm.sortDeque(arr, argc - 1);
     delete[] arr;
     return 0;
 }

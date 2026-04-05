@@ -1,5 +1,5 @@
 # ================== CONFIGURATION ================== #
-NAME      := PsmergeMe
+NAME      := PmergeMe
 CC        := c++
 CFLAGS    := -Wall -Wextra -Werror -g -std=c++98
 OPTIONS   := -I includes
